@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Smart Grid</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Dashboard de Consumo Energético</h1>
+        <div class="buttons">
+            <button onclick="novaSimulacao()" class="btn">Nova Simulação</button>
+            <button id="modo-toggle" class="btn">Alterar Modo</button>
+            <a href="{{ url_for('logout') }}" class="logout">Sair</a>
+        </div>
+        <canvas id="grafico"></canvas>
+    </div>
+
+    <script>
+        // Alternar modo claro/escuro
+        document.getElementById("modo-toggle").addEventListener("click", function () {
+            document.body.classList.toggle("modo-claro");
+        });
+
+        // Dados do gráfico
+        const dias = {{ dias | tojson }};
+        const solar = {{ solar | tojson }};
+        const rede = {{ rede | tojson }};
+
+        const ctx = document.getElementById('grafico').getContext('2d');
+        let grafico = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dias,
+                datasets: [
+                    {
+                        label: 'Energia Solar (kWh)',
+                        data: solar,
+                        borderColor: '#66bb6a',
+                        backgroundColor: 'rgba(102, 187, 106, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Energia da Rede (kWh)',
+                        data: rede,
+                        borderColor: '#1b5e20',
+                        backgroundColor: 'rgba(27, 94, 32, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#b2ff59' // texto das legendas
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#b2ff59' }
+                    },
+                    y: {
+                        ticks: { color: '#b2ff59' }
+                    }
+                }
+            }
+        });
+
+        function novaSimulacao() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
