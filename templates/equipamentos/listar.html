@@ -1,0 +1,31 @@
+{% extends 'base.html' %} {# Extende o template base #}
+
+{% block title %}Equipamentos{% endblock %} {# Define o título específico da página #}
+
+{% block content %} {# Todo o conteúdo da página vai dentro deste bloco #}
+    <h1>Lista de Equipamentos</h1>
+
+    <div class="buttons"> {# Adicionei os botões dentro de uma div com classe 'buttons' #}
+        <a href="{{ url_for('novo_equipamento') }}" class="btn">Adicionar Novo Equipamento</a>
+        <a href="{{ url_for('dashboard') }}" class="btn">Voltar para o Dashboard</a>
+    </div>
+
+    {% if equipamentos %}
+        <ul class="lista-equipamentos"> {# Adicionei uma classe para estilizar a lista #}
+            {% for equipamento in equipamentos %}
+                <li>
+                    <span>{{ equipamento.nome }} ({{ equipamento.localizacao }})</span>
+                    <div class="acoes-equipamento"> {# Agrupa as ações para melhor controle #}
+                        <a href="{{ url_for('editar_equipamento', id=equipamento.id) }}" class="btn btn-acao">Editar</a>
+                        <form action="{{ url_for('deletar_equipamento', id=equipamento.id) }}" method="post" class="form-acao">
+                            <button type="submit" class="btn btn-deletar">Deletar</button>
+                        </form>
+                        <a href="{{ url_for('listar_medicoes', equipamento_id=equipamento.id) }}" class="btn btn-acao">Ver Medições</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nenhum equipamento cadastrado ainda.</p>
+    {% endif %}
+{% endblock %}

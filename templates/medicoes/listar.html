@@ -1,0 +1,31 @@
+{% extends 'base.html' %} {# Extende o template base #}
+
+{% block title %}Medições de {{ equipamento.nome }}{% endblock %} {# Define o título específico da página #}
+
+{% block content %} {# Todo o conteúdo da página vai dentro deste bloco #}
+    <h1>Medições para {{ equipamento.nome }}</h1>
+
+    <div class="buttons"> {# Agrupa os links e botões para estilização consistente #}
+        <a href="{{ url_for('nova_medicao', equipamento_id=equipamento.id) }}" class="btn">Adicionar Nova Medição</a>
+        <a href="{{ url_for('listar_equipamentos') }}" class="btn">Voltar para Equipamentos</a>
+    </div>
+
+    {% if medicoes %}
+        <ul class="lista-medicoes"> {# Adiciona uma classe para estilizar a lista de medições #}
+            {% for medicao in medicoes %}
+                <li>
+                    {# Ajusta a exibição do valor e adiciona unidade (kWh) #}
+                    <span>Data: {{ medicao.data.strftime('%d/%m/%Y') }} - Valor: (em KwH) {{ medicao.valor }} kWh</span>
+                    <div class="acoes-equipamento"> {# Reutiliza a classe para agrupar as ações #}
+                        <a href="{{ url_for('editar_medicao', equipamento_id=equipamento.id, medicao_id=medicao.id) }}" class="btn btn-acao">Editar</a>
+                        <form action="{{ url_for('deletar_medicao', equipamento_id=equipamento.id, medicao_id=medicao.id) }}" method="post" class="form-acao">
+                            <button type="submit" class="btn btn-deletar">Deletar</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nenhuma medição encontrada para este equipamento.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Smart Grid{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {# Bloco para CSS adicional específico da página #}
+    {% block extra_css %}{% endblock %} 
+</head>
+<body>
+    {# Botão de Alternar Modo - pode ser incluído em todas as páginas #}
+    <button id="modo-toggle" class="btn modo-toggle-fixed">Alterar Modo</button>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        const modoToggleBtn = document.getElementById("modo-toggle");
+        const body = document.body;
+
+        // Verifica o estado do modo (claro/escuro) ao carregar a página
+        const currentMode = localStorage.getItem('theme');
+        if (currentMode) {
+            body.classList.add(currentMode);
+        } else {
+            // Define o modo padrão como escuro, se não houver preferência
+            body.classList.add('modo-escuro'); // Adicionei 'modo-escuro' como classe padrão
+            localStorage.setItem('theme', 'modo-escuro');
+        }
+
+        modoToggleBtn.addEventListener("click", function () {
+            if (body.classList.contains('modo-claro')) {
+                body.classList.remove('modo-claro');
+                body.classList.add('modo-escuro');
+                localStorage.setItem('theme', 'modo-escuro');
+            } else {
+                body.classList.remove('modo-escuro');
+                body.classList.add('modo-claro');
+                localStorage.setItem('theme', 'modo-claro');
+            }
+            
+            // Chama uma função de atualização de gráfico se existir (específico do dashboard)
+            if (typeof createOrUpdateChart === 'function') {
+                createOrUpdateChart();
+            }
+        });
+    </script>
+    {# Bloco para JS adicional específico da página #}
+    {% block extra_js %}{% endblock %} 
+</body>
+</html>

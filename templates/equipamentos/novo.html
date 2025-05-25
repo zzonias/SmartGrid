@@ -1,0 +1,15 @@
+{% extends 'base.html' %} {# Extende o template base #}
+
+{% block title %}Novo Equipamento{% endblock %} {# Define o título específico da página #}
+
+{% block content %} {# Todo o conteúdo da página vai dentro deste bloco #}
+    <h1>Novo Equipamento</h1>
+    <form method="post">
+        <label for="nome">Nome:</label><br>
+        <input type="text" id="nome" name="nome" required><br><br>
+        <label for="localizacao">Localização:</label><br>
+        <input type="text" id="localizacao" name="localizacao"><br><br>
+        <button type="submit">Salvar</button> {# Alterado para <button> para estilização consistente #}
+    </form>
+    <a href="{{ url_for('listar_equipamentos') }}">Cancelar</a>
+{% endblock %}

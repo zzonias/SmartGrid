@@ -1,0 +1,38 @@
+{% extends 'base.html' %} {# Extende o template base #}
+
+{% block title %}Adicionar Medição{% endblock %} {# Define o título específico da página #}
+
+{% block content %} {# Todo o conteúdo da página vai dentro deste bloco #}
+    <h1>Adicionar Nova Medição</h1>
+
+    <form method="post">
+        <div>
+            <label for="equipamento_id">Equipamento:</label>
+            {# O select se beneficia do estilo de input/select no CSS #}
+            <select name="equipamento_id" id="equipamento_id" required>
+                {# Adicione uma opção "Selecione um equipamento" se preferir #}
+                {% if not equipamentos %}
+                    <option value="">Nenhum equipamento cadastrado</option>
+                {% else %}
+                    {% for equipamento in equipamentos %}
+                        <option value="{{ equipamento.id }}">{{ equipamento.nome }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+        <div>
+            <label for="data">Data:</label>
+            <input type="date" name="data" id="data" required value="{{ 'now' | today_date_str }}">
+        </div>
+        <div>
+            <label for="valor">Valor: (em KwH)</label>
+            <input type="number" name="valor" id="valor" step="0.01" required>
+        </div>
+        <button type="submit">Adicionar Medição</button>
+    </form>
+
+    <div class="buttons"> {# Agrupa os links como botões #}
+        <a href="{{ url_for('novo_equipamento') }}" class="btn">Criar Novo Equipamento</a>
+        <a href="{{ url_for('dashboard') }}" class="btn">Voltar ao Dashboard</a>
+    </div>
+{% endblock %}

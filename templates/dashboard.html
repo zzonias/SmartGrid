@@ -1,80 +1,86 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard - Smart Grid</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <div class="container">
-        <h1>Dashboard de Consumo Energético</h1>
-        <div class="buttons">
-            <button onclick="novaSimulacao()" class="btn">Nova Simulação</button>
-            <button id="modo-toggle" class="btn">Alterar Modo</button>
-            <a href="{{ url_for('logout') }}" class="logout">Sair</a>
-        </div>
-        <canvas id="grafico"></canvas>
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Smart Grid{% endblock %}
+
+{% block content %}
+    <h1>Dashboard de Consumo Energético</h1>
+    <div class="buttons">
+        <button onclick="novaSimulacao()" class="btn">Nova Simulação</button>
+        <a href="{{ url_for('listar_equipamentos') }}" class="btn">Gerenciar Equipamentos</a>
+        <a href="{{ url_for('todas_medicoes') }}" class="btn">Ver Todas as Medições</a>
+        <a href="{{ url_for('adicionar_medicao') }}" class="btn">Adicionar Medição</a>
+        <a href="{{ url_for('logout') }}" class="logout">Sair</a>
     </div>
 
+    <div class="grafico-container">
+        <canvas id="grafico"></canvas>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Alternar modo claro/escuro
-        document.getElementById("modo-toggle").addEventListener("click", function () {
-            document.body.classList.toggle("modo-claro");
-        });
+        let grafico;
 
-        // Dados do gráfico
-        const dias = {{ dias | tojson }};
-        const solar = {{ solar | tojson }};
-        const rede = {{ rede | tojson }};
+        function createOrUpdateChart() {
+            if (grafico) {
+                grafico.destroy();
+            }
 
-        const ctx = document.getElementById('grafico').getContext('2d');
-        let grafico = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: dias,
-                datasets: [
-                    {
-                        label: 'Energia Solar (kWh)',
-                        data: solar,
-                        borderColor: '#66bb6a',
-                        backgroundColor: 'rgba(102, 187, 106, 0.2)',
-                        fill: true,
-                        tension: 0.4
+            const chartTextColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-text-color').trim();
+
+            const dias = {{ dias | tojson }};
+            const consumoTotal = {{ consumo_total | tojson }}; {# Recebendo a nova variável #}
+
+            const ctx = document.getElementById('grafico').getContext('2d');
+            grafico = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dias,
+                    datasets: [
+                        {
+                            label: 'Consumo Total (kWh)', {# Novo label #}
+                            data: consumoTotal, {# Usando a nova variável de dados #}
+                            borderColor: '#2196F3', {# Uma cor azul, por exemplo #}
+                            backgroundColor: 'rgba(33, 150, 243, 0.2)', {# Cor de fundo com transparência #}
+                            fill: true,
+                            tension: 0.4
+                        }
+                        {# Removemos os datasets de energia solar e rede #}
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: chartTextColor
+                            }
+                        }
                     },
-                    {
-                        label: 'Energia da Rede (kWh)',
-                        data: rede,
-                        borderColor: '#1b5e20',
-                        backgroundColor: 'rgba(27, 94, 32, 0.2)',
-                        fill: true,
-                        tension: 0.4
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#b2ff59' // texto das legendas
+                    scales: {
+                        x: {
+                            ticks: { color: chartTextColor },
+                            grid: {
+                                color: 'rgba(128, 128, 128, 0.2)'
+                            }
+                        },
+                        y: {
+                            ticks: { color: chartTextColor },
+                            grid: {
+                                color: 'rgba(128, 128, 128, 0.2)'
+                            }
                         }
                     }
-                },
-                scales: {
-                    x: {
-                        ticks: { color: '#b2ff59' }
-                    },
-                    y: {
-                        ticks: { color: '#b2ff59' }
-                    }
                 }
-            }
-        });
+            });
+        }
+
+        createOrUpdateChart();
 
         function novaSimulacao() {
             location.reload();
         }
     </script>
-</body>
-</html>
+{% endblock %}

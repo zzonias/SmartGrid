@@ -1,97 +1,516 @@
+/* Importa uma fonte do Google Fonts para um visual mais moderno e robusto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Segoe+UI:wght@400;700&display=swap');
+
+/* --- Variáveis CSS para Modo Escuro e Claro --- */
+:root {
+    /* Modo Escuro (padrão) */
+    --background-color: #121212;
+    --text-color: #e0e0e0;
+    --container-bg: rgba(0, 0, 0, 0.7);
+    --container-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+    --heading-color: #b2ff59;
+    --input-bg: #1e1e1e;
+    --input-color: #fff;
+    --button-gradient-start: #43a047;
+    --button-gradient-end: #66bb6a;
+    --link-color: #81c784;
+    --error-color: #ff8a65;
+    --chart-bg: rgba(255, 255, 255, 0.05);
+    --chart-grid-color: rgba(128, 128, 128, 0.2);
+    --chart-text-color: #b2ff59; /* Cor do texto para legendas e ticks do gráfico */
+    --logout-color: #f44336; /* Vermelho para o botão Sair */
+    --logout-hover-color: #da190b;
+}
+
+/* Modo Claro */
+body.modo-claro {
+    --background-color: #f0f2f5;
+    --text-color: #333;
+    --container-bg: rgba(255, 255, 255, 0.9);
+    --container-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --heading-color: #1e88e5; /* Azul para cabeçalhos no modo claro */
+    --input-bg: #e0e0e0;
+    --input-color: #333;
+    --button-gradient-start: #2196F3;
+    --button-gradient-end: #1e88e5;
+    --link-color: #1565c0; /* Azul escuro para links no modo claro */
+    --error-color: #d32f2f;
+    --chart-bg: rgba(0, 0, 0, 0.05);
+    --chart-grid-color: rgba(0, 0, 0, 0.1);
+    --chart-text-color: #333; /* Cor do texto para legendas e ticks do gráfico no modo claro */
+    --logout-color: #ef5350; /* Vermelho mais suave para o botão Sair */
+    --logout-hover-color: #d32f2f;
+}
+
+/* --- Estilos Globais --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Prioriza Roboto, fallback para Segoe UI */
 }
 
-
 body {
-    background: #121212;
-    color: #e0e0e0;
+    background-color: var(--background-color);
+    color: var(--text-color);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background-image: url(https://ecomenergia.com.br/wp-content/uploads/2021/07/imagem-capa-producao-de-energia-eolica-no-brasil.jpg);
+    justify-content: flex-start; /* Alinha o conteúdo ao topo para dashboards */
+    background-image: url('https://ecomenergia.com.br/wp-content/uploads/2021/07/imagem-capa-producao-de-energia-eolica-no-brasil.jpg');
     background-size: cover;
     background-position: center;
+    background-attachment: fixed; /* Fixa a imagem de fundo */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transição para as cores de fundo e texto */
+    padding-top: 30px; /* Espaço para o container no topo */
 }
 
-
+/* --- Container Principal (Dashboard e Outros) --- */
 .container {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: var(--container-bg);
     padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
-    max-width: 400px;
-    width: 90%;
-}
-
-
-h1, h2 {
-    color: #b2ff59;
+    border-radius: 12px;
+        box-sizing: border-box;
+    box-shadow: var(--container-shadow);
+    max-width: 900px;
+    width: 95%;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px; /* Espaço abaixo do container */
 }
 
+/* --- Títulos --- */
+h1, h2 {
+    color: var(--heading-color);
+    text-align: center;
+    margin-bottom: 25px; /* Aumentado um pouco o espaçamento */
+    font-weight: 700;
+}
 
+/* --- Inputs --- */
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="number"], /* Adicionado para inputs numéricos */
+input[type="date"],   /* Adicionado para inputs de data */
+select {              /* Adicionado para dropdowns */
     width: 100%;
-    padding: 10px;
+    padding: 12px; /* Um pouco mais de padding */
     margin: 10px 0 20px;
-    border: none;
+    border: 1px solid #333; /* Borda sutil */
     border-radius: 8px;
-    background: #1e1e1e;
-    color: #fff;
+    background: var(--input-bg);
+    color: var(--input-color);
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura */
 }
 
+/* --- Botões Gerais e Links Estilizados como Botões --- */
 button, .btn {
-    width: 100%;
-    padding: 10px;
-    background: linear-gradient(90deg, #43a047, #66bb6a);
+    display: inline-block; /* Para o .btn se comportar como botão */
+    padding: 12px 25px; /* Padding ajustado para botões */
+    background: linear-gradient(90deg, var(--button-gradient-start), var(--button-gradient-end));
     border: none;
     border-radius: 8px;
     color: white;
     font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para botões */
+    text-decoration: none; /* Remove sublinhado de links estilizados como botões */
+    font-size: 1rem; /* Tamanho da fonte padrão */
+    margin: 5px; /* Espaçamento entre botões */
 }
 
 button:hover, .btn:hover {
-    background: linear-gradient(90deg, #66bb6a, #43a047);
+    background: linear-gradient(90deg, var(--button-gradient-end), var(--button-gradient-start)); /* Inverte o gradiente no hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-a {
-    color: #81c784;
+/* --- Botão Sair (Logout) --- */
+.logout {
+    background-color: var(--logout-color);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
     text-decoration: none;
-    display: block;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin: 5px; /* Espaçamento */
+}
+
+.logout:hover {
+    background-color: var(--logout-hover-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Links Comuns --- */
+a {
+    color: var(--link-color);
+    text-decoration: none;
+    display: block; /* Para que cada link ocupe sua própria linha, se não estiver dentro de um .buttons */
     text-align: center;
     margin-top: 10px;
+    transition: color 0.3s ease;
 }
 
+a:hover {
+    text-decoration: underline;
+}
+
+/* --- Mensagens de Erro --- */
 .error {
-    color: #ff8a65;
+    color: var(--error-color);
     margin-bottom: 15px;
     text-align: center;
+    font-weight: bold;
 }
 
-.dashboard {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: rgba(20, 20, 20, 0.8);
-    border-radius: 16px;
+/* --- Seção de Botões no Dashboard --- */
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px; /* Espaçamento entre os botões */
+    margin-bottom: 30px;
 }
 
-/* Gráfico */
+/* --- Estilo do Gráfico --- */
 canvas {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    padding: 15px;
-    margin-top: 20px;
-    width: 100%;
-    max-width: 700px;
+    max-width: 100%; /* Garante que o gráfico não ultrapasse a largura do container */
+    height: 400px; /* Define uma altura fixa para o gráfico */
+    /* ou use max-height se preferir que ele cresça até um limite: */
+    /* max-height: 400px; */
+    margin-top: 30px; /* Espaçamento acima do gráfico */
+    background-color: var(--input-bg); /* Fundo sutil para o gráfico */
+    border-radius: 8px; /* Bordas arredondadas */
+    padding: 15px; /* Padding interno */
 }
+
+/* Se o gráfico ainda estiver "descendo", adicione um container pai para o canvas */
+/* --- Estilos para o Contêiner do Gráfico (Dashboard) --- */
+.grafico-container {
+    position: relative; /* Importante para o posicionamento absoluto do canvas */
+    width: 100%; /* Ocupa a largura total do container pai */
+    height: 400px; /* **Defina a altura que você deseja para o gráfico aqui** */
+    margin-top: 30px; /* Espaçamento acima do container do gráfico */
+    background-color: var(--input-bg); /* Fundo sutil para o container do gráfico */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra leve */
+    padding: 15px; /* Padding interno */
+    box-sizing: border-box; /* Garante que padding e borda sejam incluídos na altura/largura */
+    overflow: hidden; /* Oculta qualquer conteúdo que transborde (raro, mas bom para garantir) */
+}
+
+/* O canvas dentro do container do gráfico deve preencher 100% do seu pai */
+.grafico-container canvas {
+    position: absolute; /* Permite que ele preencha o container do gráfico */
+    top: 15px; /* Ajusta para dentro do padding do container */
+    left: 15px; /* Ajusta para dentro do padding do container */
+    width: calc(100% - 30px) !important; /* Preenche a largura, descontando o padding */
+    height: calc(100% - 30px) !important; /* Preenche a altura, descontando o padding */
+    /* Remova qualquer height ou width fixo que estivesse no canvas diretamente */
+}
+
+/* --- Estilos para Telas Menores (Responsividade) --- */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin: 20px auto;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .buttons {
+        flex-direction: column; /* Botões empilham em telas pequenas */
+        align-items: stretch; /* Estica os botões para preencher a largura */
+    }
+
+    button, .btn, .logout {
+        width: auto; /* Deixa a largura automática para se ajustar ao conteúdo */
+        margin: 8px 0; /* Mais espaçamento vertical entre botões empilhados */
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+}
+
+
+/* Estilo para o botão "Alterar Modo" fixo */
+.modo-toggle-fixed {
+    position: fixed; /* Fixa a posição na tela */
+    top: 20px;       /* Distância do topo */
+    right: 20px;     /* Distância da direita */
+    z-index: 1000;   /* Garante que fique acima de outros elementos */
+    width: auto !important; /* Anula a largura 100% que os botões podem ter */
+    padding: 10px 15px !important; /* Ajusta o padding para ser menor */
+}
+
+/* ... (Seu CSS anterior, continue abaixo das novas regras) ... */
+
+/* --- Estilos para Lista de Equipamentos e Medições --- */
+.lista-equipamentos, .lista-medicoes { /* Reutiliza a classe para as listas */
+    list-style: none; /* Remove os marcadores padrão da lista */
+    padding: 0;
+    margin-top: 30px;
+}
+
+.lista-equipamentos li, .lista-medicoes li {
+    background-color: var(--input-bg); /* Fundo um pouco mais escuro que o container */
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    display: flex; /* Permite organizar o conteúdo e as ações lado a lado */
+    flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+    justify-content: space-between; /* Espaço entre o texto e as ações */
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lista-equipamentos li:hover, .lista-medicoes li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.lista-equipamentos li span, .lista-medicoes li span {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    flex-grow: 1; /* Permite que o texto ocupe o espaço disponível */
+    text-align: left; /* Alinha o texto à esquerda */
+}
+
+.acoes-equipamento {
+    display: flex;
+    gap: 10px; /* Espaçamento entre os botões de ação */
+    flex-wrap: wrap; /* Permite que os botões de ação quebrem a linha */
+    justify-content: flex-end; /* Alinha as ações à direita */
+    margin-left: 15px; /* Espaço entre o texto e as ações */
+}
+
+/* Estilo para botões de ação na lista (Editar, Ver Medições) */
+.btn-acao {
+    padding: 8px 15px !important; /* Padding menor para botões dentro da lista */
+    font-size: 0.9rem !important; /* Fonte menor */
+    background: linear-gradient(90deg, var(--button-gradient-start), var(--button-gradient-end)) !important;
+}
+
+.btn-acao:hover {
+    background: linear-gradient(90deg, var(--button-gradient-end), var(--button-gradient-start)) !important;
+}
+
+/* Estilo para o botão Deletar (vermelho) */
+.btn-deletar {
+    background-color: var(--logout-color) !important; /* Usa a cor de logout */
+    padding: 8px 15px !important;
+    font-size: 0.9rem !important;
+}
+
+.btn-deletar:hover {
+    background-color: var(--logout-hover-color) !important;
+}
+
+/* Estilo para o formulário de delete inline */
+.form-acao {
+    display: inline-block; /* Mantém o formulário na mesma linha */
+}
+
+/* Adicione também estilos para os links de navegação simples como "Cancelar" */
+.container > a { /* Aplica a links que são filhos diretos do container, como "Cancelar" */
+    margin-top: 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+/* Responsividade para listas */
+@media (max-width: 600px) {
+    .lista-equipamentos li, .lista-medicoes li {
+        flex-direction: column; /* Empilha o texto e as ações */
+        align-items: flex-start;
+    }
+
+    .lista-equipamentos li span, .lista-medicoes li span {
+        margin-bottom: 10px;
+    }
+
+    .acoes-equipamento {
+        width: 100%; /* Ocupa a largura total para os botões empilhados */
+        justify-content: flex-start;
+        margin-left: 0;
+    }
+
+    .acoes-equipamento .btn, .acoes-equipamento .form-acao button {
+        width: 100%; /* Botões de ação também ocupam a largura total */
+    }
+}
+
+/* --- Estilos para Grupos de Formulário --- */
+.form-group {
+    margin-bottom: 20px; /* Espaçamento entre grupos de campos */
+    text-align: left; /* Alinha o texto das labels à esquerda */
+}
+
+.form-group label {
+    display: block; /* Garante que a label fique em sua própria linha */
+    margin-bottom: 8px; /* Espaçamento entre label e input */
+    font-weight: bold;
+    color: var(--text-color); /* Garante que a cor do texto da label mude com o tema */
+}
+
+/* Estilo para os botões dentro do formulário de filtro, se precisar de ajustes */
+.form-buttons {
+    margin-top: 30px; /* Mais espaçamento acima dos botões do formulário */
+}
+
+/* Garante que os <hr> tenham uma aparência consistente */
+hr {
+    border: none;
+    border-top: 1px solid var(--border-color); /* Usa a cor de borda do tema */
+    margin: 30px 0; /* Espaçamento acima e abaixo da linha */
+}
+
+/* --- Estilo para a soma total de medições --- */
+.soma-total {
+    background-color: var(--button-gradient-start); /* Usa uma cor de destaque dos botões */
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.soma-total h3 {
+    margin: 0; /* Remove margem padrão do h3 */
+    color: white; /* Garante que o texto seja branco */
+}
+
+/* ... (Seu CSS existente) ... */
+
+/* --- Estilos para o formulário de filtro compacto --- */
+.filtro-form-compacto {
+    margin-bottom: 20px;
+    background-color: var(--card-background); /* Fundo igual ao container */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap; /* Permite que os campos quebrem a linha */
+    gap: 15px; /* Espaçamento entre os campos */
+    justify-content: center; /* Centraliza os campos */
+    margin-bottom: 20px; /* Espaçamento antes dos botões de filtro */
+}
+
+/* Ajusta o form-group para ser flexível dentro da linha */
+.filtro-form-compacto .form-group {
+    flex: 1; /* Permite que o grupo ocupe espaço igual */
+    min-width: 200px; /* Largura mínima para evitar que fiquem muito pequenos */
+    margin-bottom: 0; /* Remove a margem inferior para evitar espaçamento duplo */
+}
+
+.filtro-form-compacto .form-group label {
+    font-size: 0.9em; /* Diminui um pouco o tamanho da label no filtro */
+    margin-bottom: 5px;
+}
+
+.filtro-form-compacto input[type="date"],
+.filtro-form-compacto select {
+    padding: 8px 12px; /* Padding menor para inputs no filtro */
+    font-size: 0.95em;
+}
+
+/* Centraliza os botões do filtro */
+.filtro-form-compacto .form-buttons {
+    margin-top: 15px; /* Ajusta a margem superior dos botões do filtro */
+    justify-content: center; /* Centraliza os botões */
+}
+
+/* ... (Seu CSS existente, continue abaixo das novas regras) ... */
+
+/* Media queries para responsividade, ajuste conforme necessário */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column; /* Empilha os campos em telas menores */
+        gap: 0; /* Remove gap quando empilhado */
+    }
+
+    .filtro-form-compacto .form-group {
+        min-width: unset; /* Remove largura mínima quando empilhado */
+        width: 100%; /* Ocupa largura total */
+        margin-bottom: 15px; /* Adiciona margem entre os grupos empilhados */
+    }
+}
+
+
+/* Estilo para botões de navegação menores no topo */
+.buttons.top-nav-buttons .btn {
+    padding: 8px 15px; /* Diminui o padding para botões menores */
+    font-size: 0.9rem; /* Diminui o tamanho da fonte */
+    margin: 5px; /* Ajusta a margem entre eles */
+}
+
+/* Reduz o espaçamento das linhas horizontais (HR) para menos espaço */
+.container hr {
+    margin: 15px 0; /* Diminui de 20px para 15px (ou menos, se quiser) */
+}
+
+h2:has(+ .soma-total) { /* Seleciona o h2 que tem um .soma-total adjacente (o "Resultados das Medições") */
+    margin-bottom: 10px; /* Reduz a margem inferior para aproximar da soma total */
+}
+
+.filtro-form-compacto {
+    margin-bottom: 15px; /* Diminui a margem inferior do formulário de filtro */
+}
+
+h2:has(+ .filtro-form-compacto) { /* Seleciona o h2 que tem um .filtro-form-compacto adjacente */
+    margin-top: 15px; /* Reduz a margem superior do título do filtro */
+    margin-bottom: 15px; /* Reduz a margem inferior do título do filtro */
+}
+
+/* Ajusta o espaçamento da soma total se houver */
+.soma-total {
+    margin-bottom: 10px; /* Reduz a margem abaixo da soma total */
+}
+
+/* ... (Seu CSS existente) ... */
+
+/* Classe para ocultar elementos */
+.hidden {
+    display: none !important;
+}
+
+/* Estilo para o botão de mostrar/ocultar */
+.show-hide-buttons {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center; /* Centraliza o botão */
+}
+
+/* Garante que o botão use o estilo .btn */
+.show-hide-buttons .btn {
+    width: auto; /* Permite que o botão se ajuste ao texto */
+    padding: 12px 25px; /* Mantém o padding padrão do botão */
+    font-size: 1rem;
+}
+
+/* ... (Seu CSS existente, continue abaixo destas novas regras) ... */

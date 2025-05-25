@@ -1,0 +1,96 @@
+{% extends 'base.html' %} {# Extende o template base #}
+
+{% block title %}Todas as Medições{% endblock %} {# Define o título específico da página #}
+
+{% block content %} {# Todo o conteúdo da página vai dentro deste bloco #}
+    <h1>Todas as Medições Registradas</h1>
+
+    <div class="buttons top-nav-buttons">
+        <a href="{{ url_for('dashboard') }}" class="btn">Voltar para o Dashboard</a>
+        <a href="{{ url_for('listar_equipamentos') }}" class="btn">Gerenciar Equipamentos</a>
+    </div>
+
+    <hr>
+
+    <h2>Filtrar Medições</h2>
+    <form method="get" action="{{ url_for('todas_medicoes') }}" class="filtro-form-compacto">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="equipamento_id">Equipamento:</label>
+                <select name="equipamento_id" id="equipamento_id">
+                    <option value="0">Todos os Equipamentos</option>
+                    {% for eq in equipamentos %}
+                        <option value="{{ eq.id }}" {% if selected_equipamento_id == eq.id|string %}selected{% endif %}>
+                            {{ eq.nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="data_inicial">Data Inicial:</label>
+                <input type="date" name="data_inicial" id="data_inicial" value="{{ selected_data_inicial or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="data_final">Data Final:</label>
+                <input type="date" name="data_final" id="data_final" value="{{ selected_data_final or '' }}">
+            </div>
+        </div>
+
+        <div class="buttons form-buttons">
+            <button type="submit" class="btn">Aplicar Filtro</button>
+            <a href="{{ url_for('todas_medicoes') }}" class="btn">Limpar Filtro</a>
+        </div>
+    </form>
+
+    <hr>
+
+    <h2>Resultados das Medições</h2>
+
+    {# Exibir a soma total #}
+    {% if medicoes %}
+        <div class="soma-total">
+            <h3>Soma Total das Medições: {{ "%.2f" | format(soma_total_medicoes) }} kWh</h3>
+        </div>
+        {# Botão para mostrar/ocultar a lista de medições #}
+        <div class="buttons show-hide-buttons">
+            <button id="toggleMedicoesBtn" class="btn">Mostrar Todas as Medições</button>
+        </div>
+
+        {# Contêiner para a lista de medições, inicialmente oculto #}
+        <div id="listaMedicoesContainer" class="hidden">
+            <ul class="lista-medicoes">
+                {% for medicao in medicoes %}
+                    <li>
+                        <span>
+                            <strong>Equipamento:</strong> {{ medicao.equipamento.nome }} -
+                            <strong>Data:</strong> {{ medicao.data.strftime('%d/%m/%Y') }} -
+                            <strong>Valor: (em KwH)</strong> {{ medicao.valor }} kWh
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p>Nenhuma medição encontrada com os filtros aplicados.</p>
+    {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const toggleMedicoesBtn = document.getElementById('toggleMedicoesBtn');
+    const listaMedicoesContainer = document.getElementById('listaMedicoesContainer');
+
+    if (toggleMedicoesBtn && listaMedicoesContainer) {
+        toggleMedicoesBtn.addEventListener('click', function() {
+            listaMedicoesContainer.classList.toggle('hidden');
+            if (listaMedicoesContainer.classList.contains('hidden')) {
+                toggleMedicoesBtn.textContent = 'Mostrar Todas as Medições';
+            } else {
+                toggleMedicoesBtn.textContent = 'Ocultar Medições';
+            }
+        });
+    }
+</script>
+{% endblock %}
