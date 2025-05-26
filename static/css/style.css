@@ -1,4 +1,4 @@
-/* Importa uma fonte do Google Fonts para um visual mais moderno e robusto */
+/* Importa a fonte*/
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Segoe+UI:wght@400;700&display=swap');
 
 /* --- Variáveis CSS para Modo Escuro e Claro --- */
@@ -42,7 +42,7 @@ body.modo-claro {
     --logout-hover-color: #d32f2f;
 }
 
-/* --- Estilos Globais --- */
+
 * {
     margin: 0;
     padding: 0;
@@ -83,20 +83,20 @@ body {
 h1, h2 {
     color: var(--heading-color);
     text-align: center;
-    margin-bottom: 25px; /* Aumentado um pouco o espaçamento */
+    margin-bottom: 25px;
     font-weight: 700;
 }
 
 /* --- Inputs --- */
 input[type="text"],
 input[type="password"],
-input[type="number"], /* Adicionado para inputs numéricos */
-input[type="date"],   /* Adicionado para inputs de data */
-select {              /* Adicionado para dropdowns */
+input[type="number"], 
+input[type="date"],  
+select {           
     width: 100%;
-    padding: 12px; /* Um pouco mais de padding */
+    padding: 12px;
     margin: 10px 0 20px;
-    border: 1px solid #333; /* Borda sutil */
+    border: 1px solid #333; 
     border-radius: 8px;
     background: var(--input-bg);
     color: var(--input-color);
@@ -106,7 +106,7 @@ select {              /* Adicionado para dropdowns */
 /* --- Botões Gerais e Links Estilizados como Botões --- */
 button, .btn {
     display: inline-block; /* Para o .btn se comportar como botão */
-    padding: 12px 25px; /* Padding ajustado para botões */
+    padding: 12px 25px; 
     background: linear-gradient(90deg, var(--button-gradient-start), var(--button-gradient-end));
     border: none;
     border-radius: 8px;
@@ -183,15 +183,12 @@ a:hover {
 canvas {
     max-width: 100%; /* Garante que o gráfico não ultrapasse a largura do container */
     height: 400px; /* Define uma altura fixa para o gráfico */
-    /* ou use max-height se preferir que ele cresça até um limite: */
-    /* max-height: 400px; */
     margin-top: 30px; /* Espaçamento acima do gráfico */
     background-color: var(--input-bg); /* Fundo sutil para o gráfico */
     border-radius: 8px; /* Bordas arredondadas */
     padding: 15px; /* Padding interno */
 }
 
-/* Se o gráfico ainda estiver "descendo", adicione um container pai para o canvas */
 /* --- Estilos para o Contêiner do Gráfico (Dashboard) --- */
 .grafico-container {
     position: relative; /* Importante para o posicionamento absoluto do canvas */
@@ -203,7 +200,7 @@ canvas {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra leve */
     padding: 15px; /* Padding interno */
     box-sizing: border-box; /* Garante que padding e borda sejam incluídos na altura/largura */
-    overflow: hidden; /* Oculta qualquer conteúdo que transborde (raro, mas bom para garantir) */
+    overflow: hidden; /* Oculta qualquer conteúdo que transborde */
 }
 
 /* O canvas dentro do container do gráfico deve preencher 100% do seu pai */
@@ -213,7 +210,6 @@ canvas {
     left: 15px; /* Ajusta para dentro do padding do container */
     width: calc(100% - 30px) !important; /* Preenche a largura, descontando o padding */
     height: calc(100% - 30px) !important; /* Preenche a altura, descontando o padding */
-    /* Remova qualquer height ou width fixo que estivesse no canvas diretamente */
 }
 
 /* --- Estilos para Telas Menores (Responsividade) --- */
@@ -260,7 +256,6 @@ canvas {
     padding: 10px 15px !important; /* Ajusta o padding para ser menor */
 }
 
-/* ... (Seu CSS anterior, continue abaixo das novas regras) ... */
 
 /* --- Estilos para Lista de Equipamentos e Medições --- */
 .lista-equipamentos, .lista-medicoes { /* Reutiliza a classe para as listas */
@@ -402,8 +397,6 @@ hr {
     color: white; /* Garante que o texto seja branco */
 }
 
-/* ... (Seu CSS existente) ... */
-
 /* --- Estilos para o formulário de filtro compacto --- */
 .filtro-form-compacto {
     margin-bottom: 20px;
@@ -445,7 +438,6 @@ hr {
     justify-content: center; /* Centraliza os botões */
 }
 
-/* ... (Seu CSS existente, continue abaixo das novas regras) ... */
 
 /* Media queries para responsividade, ajuste conforme necessário */
 @media (max-width: 768px) {
@@ -492,7 +484,6 @@ h2:has(+ .filtro-form-compacto) { /* Seleciona o h2 que tem um .filtro-form-comp
     margin-bottom: 10px; /* Reduz a margem abaixo da soma total */
 }
 
-/* ... (Seu CSS existente) ... */
 
 /* Classe para ocultar elementos */
 .hidden {
@@ -512,5 +503,3 @@ h2:has(+ .filtro-form-compacto) { /* Seleciona o h2 que tem um .filtro-form-comp
     padding: 12px 25px; /* Mantém o padding padrão do botão */
     font-size: 1rem;
 }
-
-/* ... (Seu CSS existente, continue abaixo destas novas regras) ... */

@@ -5,7 +5,7 @@
 {% block content %}
     <h1>Dashboard de Consumo Energético</h1>
     <div class="buttons">
-        <button onclick="novaSimulacao()" class="btn">Nova Simulação</button>
+        <button onclick="novaSimulacao()" class="btn">Atualizar</button>
         <a href="{{ url_for('listar_equipamentos') }}" class="btn">Gerenciar Equipamentos</a>
         <a href="{{ url_for('todas_medicoes') }}" class="btn">Ver Todas as Medições</a>
         <a href="{{ url_for('adicionar_medicao') }}" class="btn">Adicionar Medição</a>
@@ -30,7 +30,7 @@
             const chartTextColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-text-color').trim();
 
             const dias = {{ dias | tojson }};
-            const consumoTotal = {{ consumo_total | tojson }}; {# Recebendo a nova variável #}
+            const consumoTotal = {{ consumo_total | tojson }}; 
 
             const ctx = document.getElementById('grafico').getContext('2d');
             grafico = new Chart(ctx, {
@@ -39,14 +39,13 @@
                     labels: dias,
                     datasets: [
                         {
-                            label: 'Consumo Total (kWh)', {# Novo label #}
-                            data: consumoTotal, {# Usando a nova variável de dados #}
-                            borderColor: '#2196F3', {# Uma cor azul, por exemplo #}
-                            backgroundColor: 'rgba(33, 150, 243, 0.2)', {# Cor de fundo com transparência #}
+                            label: 'Consumo Total (kWh)', 
+                            data: consumoTotal,
+                            borderColor: '#2196F3',
+                            backgroundColor: 'rgba(33, 150, 243, 0.2)', 
                             fill: true,
                             tension: 0.4
                         }
-                        {# Removemos os datasets de energia solar e rede #}
                     ]
                 },
                 options: {

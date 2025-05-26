@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func 
 from werkzeug.security import generate_password_hash, check_password_hash
 import random
 import datetime
@@ -65,11 +66,6 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html')
 
-import datetime
-from sqlalchemy.sql import func # Importar func para usar funções de agregação como sum
-
-# ... (seus outros imports, como render_template, request, session, redirect, db, etc.) ...
-# Certifique-se de que Equipamento e Medicao estão importados/definidos
 
 @app.route('/dashboard')
 def dashboard():
@@ -78,21 +74,19 @@ def dashboard():
 
     # Definir os últimos 7 dias (incluindo hoje)
     dias = []
-    datas_calculo = [] # Datas no formato date para query
+    datas_calculo = []
     for i in range(6, -1, -1): # Começa 6 dias atrás até hoje
         data_atual = datetime.date.today() - datetime.timedelta(days=i)
-        dias.append(data_atual.strftime('%d/%m')) # Formato para exibição no gráfico
+        dias.append(data_atual.strftime('%d/%m')) # Formato (DD/MM) para exibição no gráfico
         datas_calculo.append(data_atual)
 
     consumo_total_diario = []
 
     for data_referencia in datas_calculo:
-        # Calcular o consumo total para cada dia
-        # Filtra as medições para o dia específico
-        # e soma os valores, ou 0.0 se não houver medições
+        # Calcular o consumo total para cada dia, filtra as medições para o dia específico e soma os valores, ou 0.0 se não houver medições
         total_do_dia = db.session.query(func.sum(Medicao.valor)).filter(
             func.date(Medicao.data) == data_referencia # Garante que estamos comparando apenas a data
-        ).scalar() # .scalar() retorna o resultado único da agregação, ou None
+        ).scalar() 
 
         consumo_total_diario.append(round(total_do_dia if total_do_dia is not None else 0.0, 2))
 
@@ -189,14 +183,11 @@ def deletar_medicao(equipamento_id, medicao_id):
     db.session.commit()
     return redirect(url_for('listar_medicoes', equipamento_id=equipamento_id))
 
-# ... (imports e outras classes/rotas) ...
-
 @app.route('/medicoes/todas')
 def todas_medicoes():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    # Inicializa a query base para Medicao
     query = Medicao.query
 
     # Variáveis para armazenar os parâmetros de filtro
@@ -224,12 +215,8 @@ def todas_medicoes():
         except ValueError:
             pass # Ignora se a data for inválida
 
-    # Ordena as medições
     medicoes = query.order_by(Medicao.data.desc()).all()
-
-    # --- NOVO CÓDIGO AQUI: Calcular a soma dos valores das medições ---
     soma_total_medicoes = sum(medicao.valor for medicao in medicoes)
-    # --- FIM DO NOVO CÓDIGO ---
 
     # Carrega todos os equipamentos para o dropdown de filtro
     equipamentos = Equipamento.query.all()
@@ -241,10 +228,9 @@ def todas_medicoes():
         selected_equipamento_id=selected_equipamento_id,
         selected_data_inicial=selected_data_inicial,
         selected_data_final=selected_data_final,
-        soma_total_medicoes=soma_total_medicoes # Passa a soma para o template
+        soma_total_medicoes=soma_total_medicoes
     )
 
-# ... (outras rotas) ...
 
 @app.route('/medicoes/adicionar', methods=['GET', 'POST'])
 def adicionar_medicao():
